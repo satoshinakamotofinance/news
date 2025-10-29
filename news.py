@@ -150,8 +150,8 @@ def display_news_from_sites(sites):
 def main():
 
     st.title("NEWS")
-    tab_globe, tab_commnews, tab_gaap,tab_tax2 = st.tabs([
-        "Global", "Commodities", "GAAP", "Tax"])
+    tab_globe, tab_commnews, tab_commgraphs,tab_gaap,tab_tax2 = st.tabs([
+        "Global", "Commodities", "Commodity prices","GAAP", "Tax"])
 
     with tab_tax2:
 
@@ -689,6 +689,55 @@ def main():
         </html>
         """
         components.html(html_code, height=52000)
+
+    with tab_commgraphs:
+
+
+
+
+
+        # TradingView Commodity Chart Widget HTML and JS
+        commodity_chart_html = """
+        <!-- TradingView Commodity Chart Widget -->
+        <div class="tradingview-widget-container">
+          <div class="tradingview-widget-container__widget"></div>
+          <div class="tradingview-widget-copyright">
+            <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text"></span></a>
+          </div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
+          {
+            "symbols": [
+              ["TVC:GOLD|1M"],
+              ["TVC:SILVER|1M"],
+              ["TVC:USOIL|1M"],
+              ["TVC:UKOIL|1M"],
+              ["CAPITALCOM:NATURALGAS|1M"],
+              ["CAPITALCOM:COPPER|1M"],
+              ["TVC:PLATINUM|1M"],
+              ["TVC:PALLADIUM|1M"],
+              ["CAPITALCOM:CORN|1M"],
+              ["CAPITALCOM:WHEAT|1M"],
+              ["CAPITALCOM:SOYBEAN|1M"],
+              ["SPARKS:COFFEE|1M"],
+              ["CMCMARKETS:ORANGEJUICEN2025|1M"]
+            ],
+            "width": "100%",
+            "height": "150%",
+            "colorTheme": "dark",
+            "autosize": true
+          }
+          </script>
+        </div>
+        """
+
+
+
+        # Display TradingView Commodity Chart Widget
+        components.html(commodity_chart_html, height=1450, width=1500,scrolling=True)
+
+        # Display TradingView Ticker Widget
+
+
 
 if __name__ == "__main__":
     main()
