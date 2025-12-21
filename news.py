@@ -4,6 +4,14 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
+import streamlit as st
+from transformers import AutoModelForCausalLM, AutoTokenizer
+import torch
+
+# Load model and tokenizer once
+@st.cache_resource(show_spinner=True)
+
+
 def show_front_page():
     st.markdown(
         """
@@ -100,6 +108,12 @@ def show_front_page():
             <h1 class="main-title">Earth Times</h1>
             <p class="subtitle">
                          </p>
+        </div>
+        
+        </div>
+            <div class="attribution">
+             Developed with ❤️  by CA. Ankit Kotriwala
+        
         </div>
 
         
@@ -274,8 +288,8 @@ def main():
 
     show_front_page()
 
-    tab_globe, tab_commnews, tab_technology, tab_finance, tab_politics, tab_science, tab_health, tab_sports, tab_editorial, tab_trending, tab_pods = st.tabs([
-        "Global", "Commodities", "Technology", "Finance", "Politics", "Science", "Health", "Sports",  "Editorial", "Trending",  "Podcasts"
+    tab_globe, tab_commnews, tab_technology, tab_pods, tab_blogs,tab_books,tab_aiknowledge,tab_travel,tab_music,tab_Radio,tab_sports,tab_trending,tab_food,tab_startups,tab_space,tab_gaming,tab_finance, tab_politics, tab_science, tab_health,tab_editorial = st.tabs([
+        "Global", "Commodities", "Technology",   "Pods", "Blogs", "Books", "AiKnowledge","Travel","Music","Radio","Sports","Trending","Food","Startups","Space","Gaming","Finance", "Politics", "Science", "Health",   "Editorial"
     ])
 
     with tab_technology:
@@ -283,6 +297,75 @@ def main():
         <!DOCTYPE html>
         <html lang="en">
         <head>
+        <!-- TradingView Widget BEGIN -->
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+              <div class="tradingview-widget-copyright">
+                <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank">
+                  <span class="blue-text"></span>
+                </a>
+              </div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js" async>
+              {
+              "symbols": [
+                {
+                  "description": "Apple",
+                  "proName": "NASDAQ:AAPL"
+                },
+                {
+                  "description": "Microsoft",
+                  "proName": "NASDAQ:MSFT"
+                },
+                {
+                  "description": "NVIDIA",
+                  "proName": "NASDAQ:NVDA"
+                },
+                {
+                  "description": "Alphabet Class A",
+                  "proName": "NASDAQ:GOOGL"
+                },
+                {
+                  "description": "Amazon",
+                  "proName": "NASDAQ:AMZN"
+                },
+                {
+                  "description": "Meta Platforms",
+                  "proName": "NASDAQ:META"
+                },
+                {
+                  "description": "Tesla",
+                  "proName": "NASDAQ:TSLA"
+                },
+                {
+                  "description": "Broadcom",
+                  "proName": "NASDAQ:AVGO"
+                },
+                {
+                  "description": "TSMC",
+                  "proName": "NYSE:TSM"
+                },
+                {
+                  "description": "Adobe",
+                  "proName": "NASDAQ:ADBE"
+                },
+                {
+                  "description": "Salesforce",
+                  "proName": "NYSE:CRM"
+                },
+                {
+                  "description": "ASML",
+                  "proName": "NASDAQ:ASML"
+                }
+              ],
+              "isTransparent": false,
+              "showSymbolLogo": true,
+              "colorTheme": "light",
+              "locale": "en"
+            }
+              </script>
+            </div>
+            <!-- TradingView Widget END -->
+
           <meta charset="UTF-8"/>
           <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
           <title>Technology News</title>
@@ -756,105 +839,105 @@ def main():
           const feedsByCategory = {
             "Politics": [
 
-    "https://rss.nytimes.com/services/xml/rss/nyt/Politics.xml",
-    "https://www.politico.com/rss/politics08.xml",
-    "https://feeds.a.dj.com/rss/RSSPolitics.xml",
-    "https://www.cnn.com/services/rss/",
-    "https://www.bbc.com/news/politics/rss.xml",
-    "https://www.theguardian.com/politics/rss",
-    "https://www.reuters.com/rssFeed/PoliticsNews",
-    "https://www.npr.org/rss/rss.php?id=1014",
-    "https://www.aljazeera.com/xml/rss/all.xml",
-    "https://rss.cnn.com/rss/edition_politics.rss",
-    "https://www.foxnews.com/about/rss/",
-    "https://www.huffpost.com/section/politics/feed",
-    "https://www.usatoday.com/rss/topic/Politics/",
-    "https://feeds.washingtonpost.com/rss/politics",
-    "https://www.nbcnews.com/id/3032091/device/rss/rss.xml",
-    "https://www.realclearpolitics.com/rss.xml",
-    "https://www.axios.com/feed.xml",
-    "https://www.c-span.org/rss/all/",
-    "https://www.bloomberg.com/politics/rss",
-    "https://www.cbsnews.com/latest/rss/politics",
-    "https://www.pbs.org/newshour/politics/feed/",
-    "https://www.nationalreview.com/feed/",
-    "https://newrepublic.com/rss.xml",
-    "https://www.thedailybeast.com/feeds/rss",
-    "https://www.theatlantic.com/feed/channel/politics/",
-    "https://www.foreignaffairs.com/rss",
-    "https://www.economist.com/united-states/rss.xml",
-    "http://www.pbs.org/wnet/rss/news/",
-    "https://www.vice.com/en_us/rss/topic/politics",
-    "https://www.politifact.com/rss/feed.xml",
-    "https://www.thediplomat.com/feed/",
-    "https://www.nationaljournal.com/feed/",
-    "https://www.politico.eu/rss",
-    "https://www.france24.com/en/rss",
-    "https://www.dw.com/en/top-stories/s-9097",
-    "https://feeds.feedburner.com/ForeignPolicy",
-    "https://www.scmp.com/rss/91/feed",
-    "https://www.lemonde.fr/politique/rss_full.xml",
-    "https://www.spiegel.de/international/index.rss",
-    "https://www.abc.net.au/news/feed/51120/rss.xml",
-    "https://feeds.skynews.com/feeds/rss/politics.xml",
-    "https://www.nytimes.com/section/world/feed",
-    "https://www.reutersagency.com/feed/?best-topics=politics&post_type=best",
-    "https://www.cnn.com/specials/politics/rss",
-    "https://www.politico.com/newsletters/rss.xml",
-    "https://www.latimes.com/politics/rss2.0.xml",
-    "https://www.theglobeandmail.com/politics/rss/",
-    "https://www.cbc.ca/cmlink/rss-politics",
-    "https://www.independent.co.uk/news/politics/rss",
-    "https://www.nationalpost.com/feed",
-    "https://www.npr.org/sections/politics/feed",
-    "https://www.usnews.com/rss/politics",
-    "https://www.thenation.com/feed/",
-    "https://www.newyorker.com/feed/news",
-    "https://abcnews.go.com/abcnews/politicsheadlines",
-    "https://www.voanews.com/rss?pid=1373",
-    "https://www.washingtontimes.com/rss/headlines/politics/",
-    "https://www.euronews.com/rss?level=theme&name=politics",
-    "https://www.politics.co.uk/feed/",
-    "https://www.thedailynews.sc/rss/politics",
-    "https://www.hrw.org/rss/news.xml",
-    "https://www.csmonitor.com/USA/Politics/Politics-Feed",
-    "https://www.nationalreview.com/feed/",
-    "https://www.thedailybeast.com/feeds/rss",
-    "https://www.propublica.org/feed",
-    "https://www.c-span.org/rss/series/C-SPAN13.rss",
-    "https://www.nbcnews.com/politics/rss",
-    "https://www.dissentmagazine.org/feed",
-    "https://www.revolution-news.com/feed/",
-    "https://thehill.com/rss/syndicator/19110",
-    "https://fivethirtyeight.com/politics/feed",
-    "https://theintercept.com/feed",
-    "https://www.rollingstone.com/politics/feed/",
-    "https://www.salon.com/feed/",
-    "https://www.politico.com/newsletters/rss/",
-    "https://www.buzzfeednews.com/feeds/politics",
-    "https://www.c-span.org/rss/feed/",
-    "https://www.washingtonexaminer.com/rss/topics/politics",
-    "https://www.thedailybeast.com/feeds/rss",
-    "https://www.realclearpolitics.com/rss_feeds/index.xml",
-    "https://www.belfasttelegraph.co.uk/news/politics/rss",
-    "https://www.thenewhumanitarian.org/rss.xml",
-    "https://www.pressherald.com/category/politics/feed/",
-    "https://www.heraldscotland.com/news/politics/feed/",
-    "https://www.politifact.com/rss/feed.xml",
-    "https://www.nationaljournal.com/feed/",
-    "https://www.chicagotribune.com/news/politics/rss2.0.xml",
-    "https://www.rollingstone.com/politics/feed/",
-    "https://www.pbs.org/newshour/politics/feed/",
-    "https://www.abc.net.au/news/feed/51120/rss.xml",
-    "https://www.irishtimes.com/news/politics/rss",
-    "https://www.politics.co.uk/feed/",
-    "https://www.thecanary.co/feed/",
-    "https://www.democracynow.org/feeds/podcast/rss",
-    "https://www.washingtontimes.com/rss/headlines/politics/",
-    "https://www.voanews.com/rss?pid=1373",
-    "https://www.propublica.org/feed",
-    "https://www.csmonitor.com/USA/Politics/Politics-Feed",
-    "https://www.wsj.com/xml/rss/3_7031.xml"
+                "https://rss.nytimes.com/services/xml/rss/nyt/Politics.xml",
+                "https://www.politico.com/rss/politics08.xml",
+                "https://feeds.a.dj.com/rss/RSSPolitics.xml",
+                "https://www.cnn.com/services/rss/",
+                "https://www.bbc.com/news/politics/rss.xml",
+                "https://www.theguardian.com/politics/rss",
+                "https://www.reuters.com/rssFeed/PoliticsNews",
+                "https://www.npr.org/rss/rss.php?id=1014",
+                "https://www.aljazeera.com/xml/rss/all.xml",
+                "https://rss.cnn.com/rss/edition_politics.rss",
+                "https://www.foxnews.com/about/rss/",
+                "https://www.huffpost.com/section/politics/feed",
+                "https://www.usatoday.com/rss/topic/Politics/",
+                "https://feeds.washingtonpost.com/rss/politics",
+                "https://www.nbcnews.com/id/3032091/device/rss/rss.xml",
+                "https://www.realclearpolitics.com/rss.xml",
+                "https://www.axios.com/feed.xml",
+                "https://www.c-span.org/rss/all/",
+                "https://www.bloomberg.com/politics/rss",
+                "https://www.cbsnews.com/latest/rss/politics",
+                "https://www.pbs.org/newshour/politics/feed/",
+                "https://www.nationalreview.com/feed/",
+                "https://newrepublic.com/rss.xml",
+                "https://www.thedailybeast.com/feeds/rss",
+                "https://www.theatlantic.com/feed/channel/politics/",
+                "https://www.foreignaffairs.com/rss",
+                "https://www.economist.com/united-states/rss.xml",
+                "http://www.pbs.org/wnet/rss/news/",
+                "https://www.vice.com/en_us/rss/topic/politics",
+                "https://www.politifact.com/rss/feed.xml",
+                "https://www.thediplomat.com/feed/",
+                "https://www.nationaljournal.com/feed/",
+                "https://www.politico.eu/rss",
+                "https://www.france24.com/en/rss",
+                "https://www.dw.com/en/top-stories/s-9097",
+                "https://feeds.feedburner.com/ForeignPolicy",
+                "https://www.scmp.com/rss/91/feed",
+                "https://www.lemonde.fr/politique/rss_full.xml",
+                "https://www.spiegel.de/international/index.rss",
+                "https://www.abc.net.au/news/feed/51120/rss.xml",
+                "https://feeds.skynews.com/feeds/rss/politics.xml",
+                "https://www.nytimes.com/section/world/feed",
+                "https://www.reutersagency.com/feed/?best-topics=politics&post_type=best",
+                "https://www.cnn.com/specials/politics/rss",
+                "https://www.politico.com/newsletters/rss.xml",
+                "https://www.latimes.com/politics/rss2.0.xml",
+                "https://www.theglobeandmail.com/politics/rss/",
+                "https://www.cbc.ca/cmlink/rss-politics",
+                "https://www.independent.co.uk/news/politics/rss",
+                "https://www.nationalpost.com/feed",
+                "https://www.npr.org/sections/politics/feed",
+                "https://www.usnews.com/rss/politics",
+                "https://www.thenation.com/feed/",
+                "https://www.newyorker.com/feed/news",
+                "https://abcnews.go.com/abcnews/politicsheadlines",
+                "https://www.voanews.com/rss?pid=1373",
+                "https://www.washingtontimes.com/rss/headlines/politics/",
+                "https://www.euronews.com/rss?level=theme&name=politics",
+                "https://www.politics.co.uk/feed/",
+                "https://www.thedailynews.sc/rss/politics",
+                "https://www.hrw.org/rss/news.xml",
+                "https://www.csmonitor.com/USA/Politics/Politics-Feed",
+                "https://www.nationalreview.com/feed/",
+                "https://www.thedailybeast.com/feeds/rss",
+                "https://www.propublica.org/feed",
+                "https://www.c-span.org/rss/series/C-SPAN13.rss",
+                "https://www.nbcnews.com/politics/rss",
+                "https://www.dissentmagazine.org/feed",
+                "https://www.revolution-news.com/feed/",
+                "https://thehill.com/rss/syndicator/19110",
+                "https://fivethirtyeight.com/politics/feed",
+                "https://theintercept.com/feed",
+                "https://www.rollingstone.com/politics/feed/",
+                "https://www.salon.com/feed/",
+                "https://www.politico.com/newsletters/rss/",
+                "https://www.buzzfeednews.com/feeds/politics",
+                "https://www.c-span.org/rss/feed/",
+                "https://www.washingtonexaminer.com/rss/topics/politics",
+                "https://www.thedailybeast.com/feeds/rss",
+                "https://www.realclearpolitics.com/rss_feeds/index.xml",
+                "https://www.belfasttelegraph.co.uk/news/politics/rss",
+                "https://www.thenewhumanitarian.org/rss.xml",
+                "https://www.pressherald.com/category/politics/feed/",
+                "https://www.heraldscotland.com/news/politics/feed/",
+                "https://www.politifact.com/rss/feed.xml",
+                "https://www.nationaljournal.com/feed/",
+                "https://www.chicagotribune.com/news/politics/rss2.0.xml",
+                "https://www.rollingstone.com/politics/feed/",
+                "https://www.pbs.org/newshour/politics/feed/",
+                "https://www.abc.net.au/news/feed/51120/rss.xml",
+                "https://www.irishtimes.com/news/politics/rss",
+                "https://www.politics.co.uk/feed/",
+                "https://www.thecanary.co/feed/",
+                "https://www.democracynow.org/feeds/podcast/rss",
+                "https://www.washingtontimes.com/rss/headlines/politics/",
+                "https://www.voanews.com/rss?pid=1373",
+                "https://www.propublica.org/feed",
+                "https://www.csmonitor.com/USA/Politics/Politics-Feed",
+                "https://www.wsj.com/xml/rss/3_7031.xml"
 
             ]
           };
@@ -940,6 +1023,7 @@ def main():
         </html>
         """
         components.html(html_code, height=22000)
+
     with tab_science:
         html_code = """
         <!DOCTYPE html>
@@ -1389,227 +1473,185 @@ def main():
         """
         components.html(html_code, height=22000)
     with tab_sports:
-        html_code = """
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8"/>
-          <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-          <title>Sports News</title>
-          <style>
-            body { font-family: 'Georgia', serif; background: #f9f9f9; margin: 0; padding: 0; }
-            header { background: white; padding: 20px; text-align: center; font-size: 2rem; border-bottom: 1px solid #ddd; }
-            #category-buttons { display: flex; flex-wrap: wrap; justify-content: center; background: #fff; border-bottom: 1px solid #ddd; }
-            .category-btn {
-              margin: 10px; padding: 10px 20px; background: #eee; border: none; border-radius: 5px;
-              cursor: pointer; font-size: 1rem; transition: background 0.3s;
+
+        st.set_page_config(page_title="Game on ", layout="wide")
+
+        st.markdown("""
+            <style>
+            body, .css-18e3th9 {
+                font-family: Georgia, Georgia;
             }
-            .category-btn:hover { background: #ccc; }
-            .news-section { padding: 20px; max-width: 1200px; margin: auto; }
-            .category-header {
-              font-size: 1.5rem; border-bottom: 2px solid #333; padding-bottom: 5px; margin-top: 40px;
-            }
-            .news-card {
-              display: flex; flex-direction: row; background: white; border-radius: 10px;
-              margin: 15px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); overflow: hidden;
-            }
-            .news-content { padding: 15px; flex: 1; }
-            .news-content h3 { margin: 0; font-size: 1.2rem; line-height:1.2; }
-            .news-content a { color: #333; text-decoration: none; }
-            .news-content a:hover { text-decoration: underline; }
-            .news-date { color: #888; font-size: 0.9rem; margin: 5px 0; }
-            .news-summary { font-size: 1rem; color: #555; }
-            @media (max-width: 600px) { .news-card { flex-direction: column; } }
-          </style>
-        </head>
-        <body>
-        <div id="category-buttons"></div>
-        <div id="news-container" class="news-section"></div>
-        <script>
-          const feedsByCategory = {
-            "Sports": [
+            </style>
+        """, unsafe_allow_html=True)
 
-            "https://feeds.bbci.co.uk/sport/rss.xml?edition=uk",
-            "https://www.espn.com/espn/rss/news",
-            "https://www.skysports.com/rss/12040",
-            "https://www.foxsports.com/feedout/syndicatedContent?categoryId=0",
-            "https://sports.yahoo.com/rss",
-            "https://www.cbssports.com/rss/headlines/",
-            "https://www.nba.com/rss/nba_rss.xml",
-            "https://www.nfl.com/rss/rsslanding?searchString=home",
-            "https://www.mlb.com/feeds/news/rss.xml",
-            "https://www.nhl.com/rss/news",
-            "https://www.sportsnet.ca/feed/",
-            "https://www.sportingnews.com/us/rss",
-            "https://www.bundesliga.com/feed",
-            "https://www.premierleague.com/rss/news",
-            "https://www.livescore.com/rss/soccer/news.xml",
-            "https://www.tennis.com/rss/news.xml",
-            "https://www.cricbuzz.com/cricket-news/latest-news/rss",
-            "https://www.skysports.com/feeds/12040",
-            "https://www.washingtonpost.com/sports/rss.xml",
-            "https://www.cbc.ca/cmlink/rss-sports",
-            "https://www.reuters.com/rssFeed/sportsNews",
-            "https://www.aol.com/tag/rss/sports.xml",
-            "https://www.espncricinfo.com/ci/content/rss/feeds_rss_cricket.xml",
-            "https://feeds.feedburner.com/SportskeedaSportsNews",
-            "https://www.foxsports.com/rss-feeds",
-            "https://www.golfchannel.com/rss",
-            "https://www.cbssports.com/fantasy/rss/news/",
-            "https://www.nbcsports.com/rss",
-            "https://bleacherreport.com/articles/feed",
-            "https://www.olympic.org/rss/news",
-            "https://nypost.com/sports/feed/",
-            "https://www.oddschecker.com/rss-feed/sports-feed.xml",
-            "https://www.tennis.com/pro-game/feed",
-            "https://www.usatoday.com/sports/feed/",
-            "https://www.bbc.com/sport/football/rss.xml",
-            "https://www.eurosport.com/rss.xml",
-            "https://runnersworld.com/rss",
-            "https://www.sbnation.com/rss/index.xml",
-            "https://profootballtalk.nbcsports.com/feed",
-            "https://www.wrestlinginc.com/rss/news",
-            "https://nfltraderumors.co/feed/",
-            "https://theathletic.com/feeds/",
-            "https://www.fourfourtwo.com/rss",
-            "https://www.sportingnews.com/rss",
-            "https://www.espn.in/espn/rss/soccer/news",
-            "https://www.mlbtraderumors.com/feed",
-            "https://www.pga.com/rss/news/rss.xml",
-            "https://www.menshealth.com/rss/sports.xml",
-            "https://www.crictracker.com/feed/",
-            "https://www.okstate.com/rss/feeds?format=xml",
-            "https://www.wthr.com/rss/sports.xml",
-            "https://www.gazettenet.com/rss",
-            "https://nypost.com/sports/feed",
-            "https://www.espncricinfo.com/rss/content/story/feeds/0.xml",
-            "https://www.si.com/rss/si_latest_news.xml",
-            "https://www.sportskeeda.com/rss-feeds",
-            "https://www.reddit.com/r/sports/.rss",
-            "https://sports.ndtv.com/rss",
-            "https://www.nbcsports.com/rss/mlb",
-            "https://www.nbcsports.com/rss/nfl",
-            "https://www.nbcsports.com/rss/nhl",
-            "https://www.nbcsports.com/rss/nba",
-            "https://www1.skysports.com/rss/12040",
-            "https://www1.skysports.com/rss/11054",
-            "https://www1.skysports.com/rss/10962",
-            "https://sports.yahoo.com/mlb/rss",
-            "https://sports.yahoo.com/nfl/rss",
-            "https://sports.yahoo.com/nba/rss",
-            "https://sports.yahoo.com/nhl/rss",
-            "https://www.basketball-reference.com/feeds/players.xml",
-            "https://www.washingtonpost.com/rss/sports",
-            "https://www.theguardian.com/sport/rss",
-            "https://www.si.com/mlb/rss",
-            "https://www.si.com/nfl/rss",
-            "https://www.si.com/nba/rss",
-            "https://www.si.com/nhl/rss",
-            "https://www.baltimoresun.com/sports/rss2.0.xml",
-            "https://www.boston.com/sports/rss",
-            "https://www.chicagotribune.com/sports/rss2.0.xml",
-            "https://www.latimes.com/sports/rss2.0.xml",
-            "https://www.startribune.com/sports/rss2.0.xml",
-            "https://sports.yahoo.com/mma/rss",
-            "https://www.ufc.com/rss",
-            "https://www.espn.com/espn/rss/mma/news",
-            "https://www.washingtonpost.com/rss/mma",
-            "https://www.foxsports.com/rss/mma",
-            "https://www.ncaa.com/rss/site_1.xml",
-            "https://bleacherreport.com/feed",
-            "https://www.goal.com/en-gb/feeds/news",
-            "https://www.skysports.com/rss/12040",
-            "https://sports.yahoo.com/soccer/rss",
-            "https://www.wrestlingnews.co/feed",
-            "https://www.tennis.com/rss/news",
-            "https://www.espn.com/espn/rss/tennis/news",
-            "https://www.nbcsports.com/rss/tennis",
-            "https://www.cbssports.com/rss/tennis"
+        st.title("Game on")
 
-            ]
-          };
+        # Sports blogs dictionary with 15 URLs per sport (example URLs, verify or replace with updated links)
 
-          const categoryButtonsDiv = document.getElementById('category-buttons');
-          const newsContainer = document.getElementById('news-container');
+        sports_blogs = {
+            "Soccer": [
+                {"title": "FotMob", "url": "https://www.fotmob.com/"},
+                {"title": "Football365", "url": "https://www.football365.com/"},
+                {"title": "Transfermarkt", "url": "https://www.transfermarkt.com/"},
 
-          Object.keys(feedsByCategory).forEach(category => {
-            const btn = document.createElement('button');
-            btn.className = 'category-btn';
-            btn.innerText = category;
-            btn.onclick = () => filterCategory(category);
-            categoryButtonsDiv.appendChild(btn);
-          });
+                {"title": "Bleacher Report Soccer", "url": "https://bleacherreport.com/world-soccer"},
+                {"title": "MLS Soccer", "url": "https://www.mlssoccer.com/"},
+                {"title": "SoccerNews", "url": "https://www.soccernews.com/"},
 
-          Object.keys(feedsByCategory).forEach(category => renderCategory(category));
 
-          function filterCategory(category) {
-            const sections = document.querySelectorAll('.news-category');
-            sections.forEach(section => {
-              section.style.display = (section.dataset.category === category) ? 'block' : 'none';
-              if (section.style.display === 'block') section.scrollIntoView({behavior: 'smooth'});
-            });
-          }
+            ],
 
-          function renderCategory(category) {
-            const sectionDiv = document.createElement('div');
-            sectionDiv.className = 'news-category';
-            sectionDiv.dataset.category = category;
-            sectionDiv.innerHTML = `<div class="category-header">${category}</div>`;
-            newsContainer.appendChild(sectionDiv);
+            "Cricket": [
+                {"title": "The Cricket Monthly", "url": "https://www.thecricketmonthly.com/"},
+                {"title": "ICC Cricket", "url": "https://www.icc-cricket.com/"},
+                {"title": "Cricket Country", "url": "https://www.cricketcountry.com/"},
+                {"title": "NDTV Sports Cricket", "url": "https://sports.ndtv.com/cricket"},
+                {"title": "FOX Cricket", "url": "https://www.foxsports.com.au/cricket"},
 
-            feedsByCategory[category].forEach(feedUrl => {
-              const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`;
+            ],
 
-              fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => {
-                  if(data.status === "ok") {
-                    const now = new Date();
-                    const threeDaysAgo = new Date();
-                    threeDaysAgo.setDate(now.getDate() - 2);
+            "Basketball": [
 
-                    data.items.forEach(item => {
-                      const pubDate = new Date(item.pubDate);
-                      if(pubDate >= threeDaysAgo && pubDate <= now) {
-                        const card = document.createElement('div');
-                        card.className = 'news-card';
+                {"title": "Basketball Insiders", "url": "https://www.basketballinsiders.com/"},
+                {"title": "Bleacher Report NBA", "url": "https://bleacherreport.com/nba"},
+                {"title": "Sports Illustrated NBA", "url": "https://www.si.com/nba"},
+                {"title": "RealGM", "url": "https://basketball.realgm.com/"},
+                {"title": "Basketball Reference", "url": "https://www.basketball-reference.com/"},
+               
+                {"title": "The Athletic NBA", "url": "https://theathletic.com/nba/"},
+            ],
 
-                        const summary = item.description ? item.description.replace(/(<([^>]+)>)/gi, "").slice(0, 150) + "..." : "";
-                        const date = pubDate.toLocaleDateString();
+            "Hockey": [
+                {"title": "NHL.com", "url": "https://www.nhl.com/news"},
+                {"title": "The Hockey News", "url": "https://thehockeynews.com/"},
+                {"title": "SB Nation NHL", "url": "https://www.sbnation.com/nhl"},
+                {"title": "ESPN NHL", "url": "https://www.espn.com/nhl/"},
+                {"title": "TSN Hockey", "url": "https://www.tsn.ca/nhl"},
+                {"title": "Hockey Reference", "url": "https://www.hockey-reference.com/"},
+                {"title": "CBS Sports NHL", "url": "https://www.cbssports.com/nhl/"},
+                {"title": "Sportsnet NHL", "url": "https://www.sportsnet.ca/nhl/"},
+                {"title": "Yahoo Sports NHL", "url": "https://sports.yahoo.com/nhl/"},
+                {"title": "TheScore NHL", "url": "https://www.thescore.com/nhl"},
+                {"title": "Hockey Wilderness", "url": "https://hockeywilderness.com/"},
+                {"title": "Boston Hockey Now", "url": "https://www.bostonhockeynow.com/"},
+                {"title": "The Hockey Writers", "url": "https://thehockeywriters.com/"},
+                {"title": "The Ice Garden", "url": "https://theicegarden.com/"},
+                {"title": "Rink Royalty", "url": "https://rinkroyalty.com/"},
+            ],
 
-                        let contentHTML = `
-                          <div class="news-content">
-                            <h3><a href="${item.link}" target="_blank">${item.title}</a></h3>
-                            <div class="news-date">${date}</div>
-                            <div class="news-summary">${summary}</div>
-                          </div>
-                        `;
+            "Tennis": [
 
-                        const imgSrc = item.thumbnail || item.enclosure?.link;
-                        if(imgSrc) {
-                          card.innerHTML = `
-                            <img src="${imgSrc}" alt="News Image" style="width:150px;object-fit:cover;" />
-                            ${contentHTML}
-                          `;
-                        } else {
-                          card.innerHTML = contentHTML;
-                        }
+                {"title": "Tennis.com", "url": "https://www.tennis.com/"},
+                {"title": "Tennis Now", "url": "https://www.tennisnow.com/"},
+                {"title": "Tennis Magazine", "url": "https://www.tennis.com/magazine/"},
+                {"title": "FlashScore Tennis", "url": "https://www.flashscore.com/tennis/"},
+                {"title": "Tennis365", "url": "https://www.tennis365.com/"},
+                {"title": "Tennis World", "url": "https://www.tennisworldusa.org/"},
+                {"title": "Inside Tennis", "url": "https://www.insidetennis.com/"},
 
-                        sectionDiv.appendChild(card);
-                      }
-                    });
-                  }
-                })
-                .catch(error => {
-                  console.error("Error fetching feed:", feedUrl, error);
-                });
-            });
-          }
-        </script>
-        </body>
-        </html>
-        """
-        components.html(html_code, height=22000)
+            ],
+
+            "Volleyball": [
+
+                {"title": "Volleyball World", "url": "https://en.volleyballworld.com/"},
+                {"title": "Volleywood", "url": "https://volleywood.net/"},
+                {"title": "USA Volleyball", "url": "https://usavolleyball.org/"},
+                {"title": "Volleyball USA", "url": "https://www.volleyusa.com/"},
+                {"title": "VolleyCountry", "url": "https://volleycountry.com/"},
+
+
+            ],
+
+
+
+            "Baseball": [
+
+                {"title": "Baseball-Reference", "url": "https://www.baseball-reference.com/"},
+                {"title": "MLB Trade Rumors", "url": "https://www.mlbtraderumors.com/"},
+
+                {"title": "Baseball Savant", "url": "https://baseballsavant.mlb.com/"},
+                {"title": "The Athletic MLB", "url": "https://theathletic.com/mlb/"},
+
+                {"title": "RotoWire Baseball", "url": "https://www.rotowire.com/baseball/"},
+            ],
+
+            "Rugby": [
+                {"title": "Planetrugby", "url": "https://www.planetrugby.com/"},
+                {"title": "Rugby World", "url": "https://www.rugbyworld.com/"},
+                {"title": "The42", "url": "https://www.the42.ie/rugby/"},
+                {"title": "ItsRugby", "url": "https://www.itsrugby.co.uk/"},
+                {"title": "Fiji Rugby", "url": "https://www.fijirugby.com/"},
+
+            ],
+
+            "Golf": [
+                {"title": "PGA Tour", "url": "https://www.pgatour.com/"},
+                {"title": "Golf Channel", "url": "https://www.golfchannel.com/"},
+                {"title": "Golf Channel News", "url": "https://www.golfchannel.com/news"},
+                {"title": "Golf Australia", "url": "https://www.golf.org.au/"},
+
+            ],
+
+            "MMA": [
+
+                {"title": "Sherdog", "url": "https://www.sherdog.com/"},
+                {"title": "MMA News", "url": "https://www.mmanews.com/"},
+                {"title": "LowKick MMA", "url": "https://www.lowkickmma.com/"},
+                {"title": "Fightful", "url": "https://www.fightful.com/"},
+                {"title": "MMA Oddsbreaker", "url": "https://mmaoddsbreaker.com/"},
+                {"title": "MiddleEasy", "url": "https://middleeasy.com/"},
+
+            ],
+
+            "Formula 1": [
+
+                {"title": "PlanetF1", "url": "https://www.planetf1.com/"},
+                {"title": "Autosport F1", "url": "https://www.autosport.com/f1/"},
+                {"title": "Motorsport.com F1", "url": "https://www.motorsport.com/f1/"},
+                {"title": "The Race", "url": "https://the-race.com/"},
+                {"title": "GP Blog", "url": "https://www.gpblog.com/en"},
+                {"title": "Motorsport Stats", "url": "https://www.motorsportstats.com/series/formula-1"},
+                {"title": "F1 Fans Forum", "url": "https://www.f1fansite.com/forums/"},
+                
+            ],
+        }
+        tab_labels = list(sports_blogs.keys())
+        tabs = st.tabs(tab_labels)
+
+        @st.cache_data(show_spinner=False)
+        def get_url_from_title(blogs_list, title):
+            for blog in blogs_list:
+                if blog["title"] == title:
+                    return blog["url"]
+            return None
+
+        for tab, sport in zip(tabs, tab_labels):
+            with tab:
+                st.subheader(f"{sport} ")
+                blogs = sports_blogs[sport]
+                blog_titles = [blog["title"] for blog in blogs]
+
+                state_key = f"selected_blog_{sport}"
+                if state_key not in st.session_state:
+                    st.session_state[state_key] = blog_titles[0]
+
+                selected_blog = st.segmented_control(
+                    "Select to explore",
+                    blog_titles,
+                    key=state_key,
+                )
+
+                selected_url = get_url_from_title(blogs, selected_blog)
+                if selected_url:
+                    iframe_html = f"""
+                    <div style="position: relative; width: 100%; height: 2000px;">
+                        <iframe src="{selected_url}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:none;" allowfullscreen></iframe>
+                    </div>
+                    """
+                    components.html(iframe_html, height=2000)
+                else:
+                    st.warning("Selected blog URL could not be found.")
+
 
     with tab_editorial:
         html_code = """
@@ -2015,62 +2057,196 @@ def main():
         components.html(html_code, height=22000)
 
     with tab_pods:
-        st.set_page_config(page_title="Podcast Browser", layout="wide")
-        st.title("Podcast ")
 
-        # Podcast  title and homepage URL to open in iframe
+
+        st.set_page_config(page_title="Podcast Browser", layout="wide")
+
+        st.markdown("""
+            <style>
+            body, .css-18e3th9 {
+                font-family: Georgia, Georgia;
+            }
+            </style>
+        """, unsafe_allow_html=True)
+
+        st.title("Podcast")
+
+
         podcasts = [
-            {"title": "The Daily - NYTimes", "url": "https://www.nytimes.com/column/the-daily"},
             {"title": "NPR News Now", "url": "https://www.npr.org/sections/news/"},
             {"title": "Radiolab", "url": "https://www.wnycstudios.org/podcasts/radiolab"},
             {"title": "Stuff You Should Know", "url": "https://www.iheart.com/podcast/105-stuff-you-should-know-26940277/"},
-            {"title": "All-In with Chamath, Jason, Sacks & Friedberg", "url": "https://allin.com/episodes"}
-
+            {"title": "All-In with Chamath, Jason, Sacks & Friedberg", "url": "https://allin.com/episodes"},
+            {"title": "TED Talks Daily", "url": "https://www.ted.com/podcasts/ted-talks-daily"},
+            {"title": "Planet Money", "url": "https://www.npr.org/sections/money/"},
+            {"title": "Armchair Expert with Dax Shepard", "url": "https://armchairexpertpod.com/"},
+            {"title": "Wait Wait... Don't Tell Me!", "url": "https://www.npr.org/programs/wait-wait-dont-tell-me/"},
+            {"title": "The Moth", "url": "https://themoth.org/podcast"},
+            {"title": "Lore", "url": "https://www.lorepodcast.com/"},
+            {"title": "Pod Save America", "url": "https://crooked.com/podcast-series/pod-save-america/"},
+            {"title": "Song Exploder", "url": "https://songexploder.net/"},
+            {"title": "99% Invisible", "url": "https://99percentinvisible.org/"},
+            {"title": "The Happiness Lab", "url": "https://www.happinesslab.fm/"},
+            {"title": "No Such Thing As A Fish", "url": "https://www.nosuchthingasafish.com/"},
+            {"title": "Revisionist History", "url": "https://revisionisthistory.com/"},
+            {"title": "The Tony Robbins Podcast", "url": "https://www.tonyrobbins.com/podcast/"},
+            {"title": "Philosophize This!", "url": "https://www.philosophizethis.org/"},
+            {"title": "Code Switch", "url": "https://www.npr.org/sections/codeswitch/"},
+            {"title": "On Being with Krista Tippett", "url": "https://onbeing.org/series/podcast/"},
+            {"title": "Science Friday", "url": "https://www.sciencefriday.com/"},
+            {"title": "The Adventure Zone", "url": "https://www.maximumfun.org/shows/adventure-zone"},
+            {"title": "Judge John Hodgman", "url": "https://maximumfun.org/shows/judge-john-hodgman/"},
+            {"title": "The Magnus Archives", "url": "https://rustyquill.com/show/the-magnus-archives/"},
         ]
+        tab_titles = [pod["title"] for pod in podcasts]
 
-            # Create tabs in a row and store titles
-    pod_titles = [pod["title"] for pod in podcasts]
+        if "selected_podcast" not in st.session_state:
+            st.session_state.selected_podcast = tab_titles[0]
 
-    # Select the active podcast tab (using Streamlit session state)
-    if "selected_tab" not in st.session_state:
-        st.session_state.selected_tab = pod_titles[0]
+        selected_tab = st.segmented_control("Select a podcast", tab_titles, key="selected_podcast")
 
-    # Horizontal tab buttons with inline style
-    tabs_html_start = "<div style='display: flex; gap: 10px; border-bottom: 2px solid #ccc; padding-bottom: 8px;'>"
-    st.markdown(tabs_html_start, unsafe_allow_html=True)
+        @st.cache_data(show_spinner=False)
+        def get_url_from_title(title):
+            for pod in podcasts:
+                if pod["title"] == title:
+                    return pod["url"]
+            return None
 
-    for title in pod_titles:
-        is_active = title == st.session_state.selected_tab
-        button_style = (
-            "padding: 10px 16px; "
-            "border: none; border-bottom: 3px solid #1f77b4; "
-            "background-color: #e3f2fd; font-weight: bold; cursor: pointer;" if is_active
-            else "padding: 10px 16px; border: none; background-color: transparent; cursor: pointer; color: #555;"
-        )
-        if st.button(title, key=title, help=f"Open {title}",
-                     on_click=lambda t=title: st.session_state.__setitem__("selected_tab", t)):
-            pass
+        selected_url = get_url_from_title(selected_tab)
 
-    st.markdown("</div>", unsafe_allow_html=True)
-
-    # Find selected podcast URL
-    selected_url = next((pod["url"] for pod in podcasts if pod["title"] == st.session_state.selected_tab), podcasts[0]["url"])
-
-    # Embed selected podcast webpage in an iframe responsive container
-    iframe_html = f"""
-    <div style="position: relative; width: 100%; height: 700px;">
-        <iframe src="{selected_url}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:none;" allowfullscreen></iframe>
-
-    </div>
-    """
-    components.html(iframe_html, height=700)
+        if selected_url:
+            iframe_html = f"""
+            <div style="position: relative; width: 100%; height: 2000px;">
+                <iframe src="{selected_url}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:none;" allowfullscreen></iframe>
+            </div>
+            """
+            components.html(iframe_html, height =2000)
+        else:
+            st.warning("Selected podcast URL could not be found.")
 
 
     with tab_commnews:
+
         html_code = """
         <!DOCTYPE html>
         <html lang="en">
-        <head>
+        <head>    
+        <!-- TradingView Widget BEGIN -->
+        <div class="tradingview-widget-container">
+          <div class="tradingview-widget-container__widget"></div>
+          <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text"></span></a></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js" async>
+          {
+          "symbols": [
+            {
+              "description": "Gold",
+              "proName": "TVC:GOLD"
+            },
+            {
+              "description": "Silver",
+              "proName": "TVC:SILVER"
+            },
+            {
+              "description": "Oil",
+              "proName": "TVC:USOIL"
+            },
+            {
+              "description": "Brent",
+              "proName": "TVC:UKOIL"
+            },
+            {
+              "description": "Natural gas",
+              "proName": "CAPITALCOM:NATURALGAS"
+            },
+            {
+              "description": "Copper",
+              "proName": "CAPITALCOM:COPPER"
+            },
+            {
+              "description": "Platinum",
+              "proName": "TVC:PLATINUM"
+            },
+            {
+              "description": "Palladium",
+              "proName": "TVC:PALLADIUM"
+            },
+            {
+              "description": "Corn",
+              "proName": "CAPITALCOM:CORN"
+            },
+            {
+              "description": "Wheat",
+              "proName": "CAPITALCOM:WHEAT"
+            },
+            {
+              "description": "Soybean",
+              "proName": "CAPITALCOM:SOYBEAN"
+            },
+            {
+              "description": "Coffee",
+              "proName": "SPARKS:COFFEE"
+            },
+            {
+              "description": "Cocoa",
+              "proName": "NYMEX:CJ1!"
+            },
+            {
+              "description": "Cotton",
+              "proName": "NYMEX:TT1!"
+            },
+            {
+              "description": "Sugar",
+              "proName": "NYMEX:YO1!"
+            },
+            {
+              "description": "Lean hogs",
+              "proName": "CME:HE1!"
+            },
+            {
+              "description": "Live cattle",
+              "proName": "CME:LE1!"
+            },
+            {
+              "description": "Feeder cattle",
+              "proName": "CME:GF1!"
+            },
+            {
+              "description": "Orange juice",
+              "proName": "CMCMARKETS:ORANGEJUICEN2025"
+            },
+            {
+              "description": "Rough rice",
+              "proName": "CBOT:ZR1!"
+            },
+            {
+              "description": "Milk",
+              "proName": "CME:GDK1!"
+            },
+            {
+              "description": "Heating oil",
+              "proName": "ICEEUR:UHO1!"
+            },
+            {
+              "description": "Gasoline",
+              "proName": "NYMEX:RB1!"
+            },
+            {
+              "description": "Aluminium",
+              "proName": "COMEX:ALI1!"
+            },
+            {
+              "description": "Soybean",
+              "proName": "CBOT:ZM1!"
+            }
+          ],
+          "isTransparent": false,
+          "showSymbolLogo": true,
+          "colorTheme": "light",
+          "locale": "en"
+        }
+          </script>
+        </div>
+        <!-- TradingView Widget END -->
           <meta charset="UTF-8"/>
           <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
           <title>Commodities News</title>
@@ -2260,6 +2436,62 @@ def main():
         <!DOCTYPE html>
         <html lang="en">
         <head>
+            <!-- TradingView Widget BEGIN -->
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+              <div class="tradingview-widget-copyright">
+                <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank">
+                  <span class="blue-text"></span>
+                </a>
+              </div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js" async>
+              {
+              "symbols": [
+               
+                {
+                  "description": "Nasdaq 100",
+                  "proName": "NASDAQ:NDX"
+                },
+                {
+                  "description": "FTSE 100",
+                  "proName": "OANDA:UK100GBP"
+                },
+                {
+                  "description": "DAX 40",
+                  "proName": "XETR:DAX"
+                },
+                
+                {
+                  "description": "Nikkei 225",
+                  "proName": "INDEX:NKY"
+                },
+                {
+                  "description": "Hang Seng",
+                  "proName": "HSI:HSI"
+                },
+               
+                {
+                  "description": "BSE Sensex",
+                  "proName": "INDEX:SENSEX"
+                },
+                {
+                  "description": "MSCI World",
+                  "proName": "TVC:WORLD"
+                },
+                {
+                  "description": "Euro Stoxx 50",
+                  "proName": "INDEX:STOXX50E"
+                }
+              ],
+              "isTransparent": false,
+              "showSymbolLogo": true,
+              "colorTheme": "light",
+              "locale": "en"
+            }
+              </script>
+            </div>
+            <!-- TradingView Widget END -->
+
           <meta charset="UTF-8"/>
           <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
           <title>Global News</title>
@@ -2434,6 +2666,607 @@ def main():
         </html>
         """
         components.html(html_code, height=52000)
+
+    with tab_blogs:
+
+
+        st.set_page_config(page_title="Top Blogs Browser", layout="wide")
+
+        st.markdown("""
+            <style>
+            body, .css-18e3th9 {
+                font-family: Georgia, Georgia;
+            }
+            </style>
+        """, unsafe_allow_html=True)
+
+        st.title("Top Blogs")
+
+        blogs = [
+            {"title": "Lifehacker", "url": "https://lifehacker.com/"},
+            {"title": "Wired", "url": "https://www.wired.com/"},
+            {"title": "VentureBeat", "url": "https://venturebeat.com/"},
+            {"title": "Copyblogger", "url": "https://copyblogger.com/"},
+            {"title": "Neil Patel Blog", "url": "https://neilpatel.com/blog/"},
+            {"title": "Moz Blog", "url": "https://moz.com/blog"},
+            {"title": "Social Media Examiner", "url": "https://www.socialmediaexaminer.com/"},
+            {"title": "The Next Web", "url": "https://thenextweb.com/"},
+            {"title": "Vogue", "url": "https://www.vogue.com/"},
+            {"title": "GQ", "url": "https://www.gq.com/"},
+            {"title": "Pitchfork", "url": "https://pitchfork.com/"},
+            {"title": "CNET", "url": "https://www.cnet.com/"},
+            {"title": "Shopify Blog", "url": "https://www.shopify.com/blog"},
+            {"title": "Smart Passive Income", "url": "https://www.smartpassiveincome.com/blog/"},
+            {"title": "Copyhackers", "url": "https://copyhackers.com/blog/"},
+        ]
+
+        blog_titles = [blog["title"] for blog in blogs]
+
+        if "selected_blog" not in st.session_state:
+            st.session_state.selected_blog = blog_titles[0]
+
+        selected_blog = st.segmented_control("Select a blog to read", blog_titles, key="selected_blog")
+
+        @st.cache_data(show_spinner=False)
+        def get_url_from_title(title):
+            for blog in blogs:
+                if blog["title"] == title:
+                    return blog["url"]
+            return None
+
+        selected_url = get_url_from_title(selected_blog)
+
+        if selected_url:
+            iframe_html = f"""
+            <div style="position: relative; width: 100%; height: 2000px;">
+                <iframe src="{selected_url}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:none;" allowfullscreen></iframe>
+            </div>
+            """
+            components.html(iframe_html, height=2000)
+        else:
+            st.warning("Selected blog URL could not be found.")
+
+    with tab_books:
+
+        st.set_page_config(page_title="Free Books Browser", layout="wide")
+
+        st.markdown("""
+            <style>
+            body, .css-18e3th9 {
+                font-family: Georgia, Georgia;
+            }
+            </style>
+        """, unsafe_allow_html=True)
+
+        st.title("Free Books")
+
+        books_sources = [
+            {"title": "Project Gutenberg", "url": "https://www.gutenberg.org/"},
+            {"title": "Open Library", "url": "https://openlibrary.org/"},
+            {"title": "LibriVox (Audiobooks)", "url": "https://librivox.org/"},
+            {"title": "Internet Archive - eBooks", "url": "https://archive.org/details/texts"},
+            {"title": "Free-EBooks.net", "url": "https://www.free-ebooks.net/"},
+            {"title": "Obooko", "url": "https://www.obooko.com/"},
+            {"title": "Classicly", "url": "https://classicly.com/"},
+            {"title": "GetFreeEBooks", "url": "https://www.getfreeebooks.com/"},
+            {"title": "BookRix", "url": "https://www.bookrix.com/"},
+            {"title": "FreeComputerBooks", "url": "https://freecomputerbooks.com/"},
+            {"title": "Planet eBook", "url": "https://www.planetebook.com/"},
+            {"title": "PDF Books World", "url": "https://www.pdfbooksworld.com/"},
+            {"title": "Open Culture", "url": "https://www.openculture.com/free_ebooks"},
+            {"title": "PublicBookshelf", "url": "https://www.publicbookshelf.com/"},
+            {"title": "WikiSource", "url": "https://en.wikisource.org/wiki/Main_Page"},
+            {"title": "International Children's Digital Library", "url": "http://en.childrenslibrary.org/"},
+            {"title": "HathiTrust Digital Library", "url": "https://www.hathitrust.org/"},
+            {"title": "Project Muse", "url": "https://muse.jhu.edu/"},
+            {"title": "Literature Project", "url": "https://www.literatureproject.com/"},
+            {"title": "Classic Bookshelf", "url": "http://www.classicbookshelf.com/"},
+            {"title": "WikiBooks", "url": "https://www.wikibooks.org/"},
+            {"title": "Authorama", "url": "http://www.authorama.com/"},
+
+        ]
+
+        titles = [source["title"] for source in books_sources]
+
+        # Initialize session_state key if not present
+        if "selected_source" not in st.session_state:
+            st.session_state.selected_source = titles[0]
+
+        selected_source = st.segmented_control("Select a free book source", titles, key="selected_source")
+
+        @st.cache_data(show_spinner=False)
+        def get_url_from_title(title):
+            # Cache the lookup by title
+            for source in books_sources:
+                if source["title"] == title:
+                    return source["url"]
+            return None
+
+        selected_url = get_url_from_title(selected_source)
+
+        if selected_url:
+            iframe_html = f"""
+            <div style="position: relative; width: 100%; height: 2000px;">
+                <iframe src="{selected_url}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:none;" allowfullscreen></iframe>
+            </div>
+            """
+            components.html(iframe_html, height=2000)
+        else:
+            st.warning("Selected book source URL could not be found.")
+
+    with tab_aiknowledge:
+
+        st.set_page_config(page_title="AI Search Engines Browser", layout="wide")
+
+        st.markdown("""
+            <style>
+            body, .css-18e3th9 {
+                font-family: Georgia, Georgia;
+            }
+            </style>
+        """, unsafe_allow_html=True)
+
+        st.title("AI Tools and Search engines")
+
+        ai_search_sources = [
+
+            {"title": "Exa AI", "url": "https://exa.ai"},
+            {"title": "Anthropic Claude", "url": "https://www.anthropic.com/"},
+            {"title": "Komo AI", "url": "https://komo.ai/"},
+            {"title": "DeepSeek AI", "url": "https://deepseek.ai/"},
+            {"title": "Consensus AI", "url": "https://consensus.app/search"},
+            {"title": "SearXNG", "url": "https://searxng.org/"},
+            {"title": "Toolify AI Tools Directory", "url": "https://www.toolify.ai"},
+            {"title": "Futurepedia AI Tools Directory", "url": "https://www.futurepedia.io"},
+            {"title": "There's An AI For That", "url": "https://theresanaiforthat.com"},
+            {"title": "Vercel AI Search", "url": "https://vercel.com/ai"},
+            {"title": "Cogram AI Search", "url": "https://cogram.com/"},
+            {"title": "Genei AI", "url": "https://genei.io/"},
+            {"title": "Elicit AI Research Assistant", "url": "https://elicit.org/"},
+            {"title": "Research Rabbit", "url": "https://researchrabbitapp.com/"},
+            {"title": "TopBots AI Search Directory", "url": "https://www.topbots.com/ai-tools/"},
+            {"title": "Learn Prompting", "url": "https://learnprompting.org/"},
+            {"title": "GPT Index", "url": "https://gpt-index.readthedocs.io/"},
+            {"title": "AI Tools List", "url": "https://aitoolsdirectory.com/"},
+            {"title": "AI Tool Tracker", "url": "https://www.aitooltracker.com/"},
+            {"title": "AI Radar", "url": "https://airadar.io/"},
+            {"title": "AI Landscape", "url": "https://landscape.lfai.foundation/"},
+            {"title": "Lambda Labs AI Tools", "url": "https://lambdalabs.com/"},
+            {"title": "AI Dungeon", "url": "https://play.aidungeon.io/"},
+            {"title": "AI Experiments by Google", "url": "https://experiments.withgoogle.com/collection/ai"},
+            {"title": "Chromebot AI", "url": "https://chromebot.ai/"},
+            {"title": "Microsoft Cognitive Services", "url": "https://azure.microsoft.com/en-us/services/cognitive-services/"},
+            {"title": "OpenAI Codex", "url": "https://openai.com/blog/openai-codex/"},
+            {"title": "Pictory AI", "url": "https://pictory.ai/"},
+            {"title": "Reviewshake AI", "url": "https://reviewshake.com/"},
+            {"title": "Beautiful AI", "url": "https://www.beautiful.ai/"},
+            {"title": "ContentBot AI", "url": "https://contentbot.ai/"},
+            {"title": "GrowthBar AI", "url": "https://www.growthbarseo.com/"},
+            {"title": "TextCortex AI", "url": "https://textcortex.com/"},
+            {"title": "Lately AI", "url": "https://www.lately.ai/"},
+            {"title": "Surfer SEO AI", "url": "https://surferseo.com/"},
+            {"title": "MarketMuse AI", "url": "https://marketmuse.com/"},
+            {"title": "Outranking AI", "url": "https://www.outranking.io/"},
+            {"title": "Text Blaze AI", "url": "https://blaze.today/"},
+            {"title": "Smartwriter AI", "url": "https://www.smartwriter.ai/"},
+
+        ]
+
+        titles = [source["title"] for source in ai_search_sources]
+
+        # Initialize session_state key if not present
+        if "selected_ai_source" not in st.session_state:
+            st.session_state.selected_ai_source = titles[0]
+
+        selected_source = st.segmented_control("Select an AI search engine", titles, key="selected_ai_source")
+
+        @st.cache_data(show_spinner=False)
+        def get_url_from_title(title):
+            for source in ai_search_sources:
+                if source["title"] == title:
+                    return source["url"]
+            return None
+
+        selected_url = get_url_from_title(selected_source)
+
+        if selected_url:
+            iframe_html = f"""
+            <div style="position: relative; width: 100%; height: 1200px;">
+                <iframe src="{selected_url}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:none;" allowfullscreen></iframe>
+            </div>
+            """
+            components.html(iframe_html, height=1200)
+        else:
+            st.warning("Selected AI search engine URL could not be found.")
+
+
+
+
+
+    with tab_travel:
+
+
+        st.set_page_config(page_title="Travel Browser", layout="wide")
+
+        st.markdown("""
+            <style>
+            body, .css-18e3th9 {
+                font-family: Georgia, Georgia;
+            }
+            </style>
+        """, unsafe_allow_html=True)
+
+        st.title("Travel Resources")
+
+        travel_sites = [
+            {"title": "Lonely Planet", "url": "https://www.lonelyplanet.com/"},
+            {"title": "National Geographic Travel", "url": "https://www.nationalgeographic.com/travel/"},
+            {"title": "The Points Guy", "url": "https://thepointsguy.com/"},
+            {"title": "Rough Guides", "url": "https://www.roughguides.com/"},
+            {"title": "Jetsetter", "url": "https://www.jetsetter.com/"},
+
+            {"title": "Travel Noire", "url": "https://travelnoire.com/"},
+
+
+            {"title": "Adventurous Kate", "url": "https://www.adventurouskate.com/"},
+
+            {"title": "Hand Luggage Only", "url": "https://www.handluggageonly.co.uk/"},
+
+            {"title": "Travelling King", "url": "https://travellingking.com/"},
+
+            {"title": "Travel Awaits", "url": "https://www.travelawaits.com/"},
+
+            {"title": "BootsnAll", "url": "https://www.bootsnall.com/"},
+            {"title": "Atlas & Boots", "url": "https://atlasandboots.com/"},
+
+            {"title": "Road Affair", "url": "https://www.roadaffair.com/"},
+            {"title": "Roads & Kingdoms", "url": "https://roadsandkingdoms.com/"},
+            {"title": "The Travel Tester", "url": "https://thetraveltester.com/"},
+            {"title": "Where’s Sharon", "url": "https://wheressharon.com/"},
+
+        ]
+
+        titles = [site["title"] for site in travel_sites]
+
+        if "selected_travel_site" not in st.session_state:
+            st.session_state.selected_travel_site = titles[0]
+
+        selected_site = st.segmented_control("Select a travel site", titles, key="selected_travel_site")
+
+        @st.cache_data(show_spinner=False)
+        def get_url_from_title(title):
+            for site in travel_sites:
+                if site["title"] == title:
+                    return site["url"]
+            return None
+
+        selected_url = get_url_from_title(selected_site)
+
+        if selected_url:
+            iframe_html = f"""
+            <div style="position: relative; width: 100%; height: 2000px;">
+                <iframe src="{selected_url}" style="position: absolute; top:0; left:0; width:100%; height:100%; border:none;" allowfullscreen></iframe>
+            </div>
+            """
+            components.html(iframe_html,height=2000)
+        else:
+            st.warning("Selected travel site URL could not be found.")
+    
+    with tab_music :
+
+
+        st.set_page_config(page_title="Free Music Browser", layout="wide")
+
+        st.markdown("""
+            <style>
+            body, .css-18e3th9 {
+                font-family: Georgia, Georgia;
+            }
+            </style>
+        """, unsafe_allow_html=True)
+
+        st.title("Free Music Sources")
+
+
+        music_sources = [
+            {"title": "Freefy", "url": "https://freefy.app/"},
+            {"title": "Soundstripe", "url": "https://www.soundstripe.com/"},
+            {"title": "Littlive", "url": "https://littlive.com/genres"},
+            {"title": "Freeplay Music", "url": "https://freeplaymusic.com/"},
+            {"title": "iHeartRadio", "url": "https://www.iheart.com/"},
+            {"title": "Bandcamp", "url": "https://bandcamp.com/"},
+            {"title": "Internet Archive Audio", "url": "https://archive.org/details/audio/"},
+            {"title": "JamPlay", "url": "https://www.jamplay.com/"},
+            {"title": "Spinrilla", "url": "https://www.spinrilla.com/"},
+            {"title": "DatPiff", "url": "https://www.datpiff.com/"},
+
+            {"title": "Radio Garden", "url": "http://radio.garden/"},
+            {"title": "TeknoAXE", "url": "https://teknoaxe.com/Home.php"},
+            {"title": "PureVolume", "url": "https://purevolume.com/"},
+            {"title": "LiveOne", "url": "https://www.liveone.com/"},
+
+
+
+        # Add up to 100+ with more genre-specific, classical, podcast sources, radio stations, and new independent music hubs...
+        ]
+        titles = [source["title"] for source in music_sources]
+
+        if "selected_music_source" not in st.session_state:
+            st.session_state.selected_music_source = titles[0]
+
+        selected_source = st.segmented_control("Select a free music source", titles, key="selected_music_source")
+
+        @st.cache_data(show_spinner=False)
+        def get_url_from_title(title):
+            for source in music_sources:
+                if source["title"] == title:
+                    return source["url"]
+            return None
+
+        selected_url = get_url_from_title(selected_source)
+
+        if selected_url:
+            iframe_html = f"""
+            <div style="position: relative; width: 100%; height: 1200px;">
+                <iframe src="{selected_url}" style="position: absolute; top: 0; left: 0; 
+                width: 100%; height: 100%; border:none;" allowfullscreen></iframe>
+            </div>
+            """
+            components.html(iframe_html, height=1200)
+        else:
+            st.warning("Selected music source URL could not be found.")
+
+    with tab_Radio:
+        import random
+        import requests
+
+        st.set_page_config(page_title="World Internet Radio", layout="wide")
+        st.title("World Internet Radio")
+
+        API_BASE = "https://de1.api.radio-browser.info/json"
+
+        # ---------- Helpers ----------
+
+        @st.cache_data(ttl=3600)
+        def get_top_stations(limit=200):
+            url = f"{API_BASE}/stations/topclick"
+            resp = requests.get(url, params={"limit": limit}, timeout=10)
+            resp.raise_for_status()
+            return resp.json()
+
+        @st.cache_data(ttl=3600)
+        def get_countries():
+            url = f"{API_BASE}/countries"
+            resp = requests.get(url, timeout=10)
+            resp.raise_for_status()
+            return resp.json()
+
+        @st.cache_data(ttl=3600)
+        def get_tags():
+            url = f"{API_BASE}/tags"
+            resp = requests.get(url, timeout=10)
+            resp.raise_for_status()
+            return resp.json()
+
+        @st.cache_data(ttl=3600)
+        def search_stations(country=None, tag=None, limit=200):
+            # Simple search using /stations/search
+            url = f"{API_BASE}/stations/search"
+            params = {
+                "limit": limit,
+                "hidebroken": True,
+            }
+            if country:
+                params["country"] = country
+            if tag:
+                params["tag"] = tag
+            resp = requests.get(url, params=params, timeout=10)
+            resp.raise_for_status()
+            return resp.json()
+
+        def station_display_name(s):
+            name = s.get("name") or "Unknown"
+            country = s.get("country") or "N/A"
+            codec = s.get("codec") or "?"
+            bitrate = s.get("bitrate") or "?"
+            return f"{name} [{country}] ({codec} {bitrate} kbps)"
+
+        def play_station_ui(station):
+            st.subheader(station.get("name", "Unknown station"))
+
+            col1, col2, col3 = st.columns([2, 2, 1])
+            with col1:
+                st.write(f"Country: {station.get('country', 'N/A')}")
+                st.write(f"Language: {station.get('language', 'N/A')}")
+            with col2:
+                st.write(f"Codec: {station.get('codec', '?')}")
+                st.write(f"Bitrate: {station.get('bitrate', '?')} kbps")
+                tags = station.get("tags") or ""
+                if isinstance(tags, str):
+                    st.write(f"Tags: {tags}")
+            with col3:
+                favicon = station.get("favicon")
+                if favicon:
+                    st.image(favicon, width=64)
+
+            homepage = station.get("homepage")
+            if homepage:
+                st.markdown(f"[Station website]({homepage})")
+
+            stream_url = station.get("url_resolved") or station.get("url")
+            if not stream_url:
+                st.error("This station does not provide a stream URL.")
+            else:
+                st.audio(stream_url, autoplay=True)
+
+        # ---------- Session state for favorites & history ----------
+
+        if "favorites" not in st.session_state:
+            st.session_state.favorites = []  # list of stationuuid
+        if "history" not in st.session_state:
+            st.session_state.history = []  # list of station dicts
+
+        def add_to_history(station):
+            # Keep last 10
+            hist = st.session_state.history
+            # Avoid duplicates back-to-back
+            if not hist or hist[-1].get("stationuuid") != station.get("stationuuid"):
+                hist.append(station)
+                if len(hist) > 10:
+                    del hist[0]
+
+        def toggle_favorite(station):
+            uuid = station.get("stationuuid")
+            if not uuid:
+                return
+            if uuid in st.session_state.favorites:
+                st.session_state.favorites.remove(uuid)
+            else:
+                st.session_state.favorites.append(uuid)
+
+        def is_favorite(station):
+            uuid = station.get("stationuuid")
+            return uuid in st.session_state.favorites if uuid else False
+
+        # ---------- Sidebar filters ----------
+
+
+
+        # Preload country and tag lists
+        try:
+            countries_raw = get_countries()
+            tags_raw = get_tags()
+        except Exception as e:
+            st.error(f"Failed to load filters: {e}")
+            countries_raw, tags_raw = [], []
+
+        countries = ["Any"] + sorted([c["name"] for c in countries_raw]) if countries_raw else ["Any"]
+        tags = ["Any"] + sorted([t["name"] for t in tags_raw][:300]) if tags_raw else ["Any"]
+
+        country_filter = st.selectbox("Country", countries)
+        tag_filter = st.selectbox("Tag / Genre", tags)
+
+        min_bitrate = st.slider("Min bitrate (kbps)", 0, 320, 0, step=32)
+
+        surprise_me = st.button("🎲 Surprise me")
+
+        st.markdown("---")
+
+
+        # ---------- Tabs ----------
+
+        tab_top, tab_discover, tab_fav = st.tabs(["Top 200", "Discover", "Favorites"])
+
+        current_station = None
+
+        # --- Top 200 tab ---
+        with tab_top:
+            st.header("Top 200 Stations (Global)")
+            try:
+                stations_top = get_top_stations(200)
+            except Exception as e:
+                st.error(f"Failed to load top stations: {e}")
+                stations_top = []
+
+            # Apply local bitrate filter
+            stations_top = [s for s in stations_top if (s.get("bitrate") or 0) >= min_bitrate]
+
+            if not stations_top:
+                st.warning("No stations found for current filters.")
+            else:
+                option_labels = [station_display_name(s) for s in stations_top]
+                idx_default = 0
+
+                if surprise_me:
+                    idx_default = random.randrange(len(stations_top))
+
+                choice = st.selectbox("Choose a station", option_labels, index=idx_default, key="top_select")
+                current_station = stations_top[option_labels.index(choice)]
+
+                fav_col, play_col = st.columns([1, 4])
+                with fav_col:
+                    if st.button("★ Favorite" if not is_favorite(current_station) else "★ Unfavorite"):
+                        toggle_favorite(current_station)
+                with play_col:
+                    st.write("")
+
+                play_station_ui(current_station)
+                add_to_history(current_station)
+
+        # --- Discover tab ---
+        with tab_discover:
+            st.header("Discover by Country / Tag")
+            st.caption("Use filters on the left, then pick from the results.")
+
+            selected_country = None if country_filter == "Any" else country_filter
+            selected_tag = None if tag_filter == "Any" else tag_filter
+
+            try:
+                stations_disc = search_stations(country=selected_country, tag=selected_tag, limit=200)
+            except Exception as e:
+                st.error(f"Failed to search stations: {e}")
+                stations_disc = []
+
+            stations_disc = [s for s in stations_disc if (s.get("bitrate") or 0) >= min_bitrate]
+
+            if not stations_disc:
+                st.warning("No stations found for current filters.")
+            else:
+                labels_disc = [station_display_name(s) for s in stations_disc]
+                idx_default_disc = 0
+                if surprise_me:
+                    idx_default_disc = random.randrange(len(stations_disc))
+
+                choice_disc = st.selectbox("Choose a station", labels_disc, index=idx_default_disc, key="disc_select")
+                current_station_disc = stations_disc[labels_disc.index(choice_disc)]
+
+                fav_col2, play_col2 = st.columns([1, 4])
+                with fav_col2:
+                    if st.button("★ Favorite" if not is_favorite(current_station_disc) else "★ Unfavorite", key="fav_disc"):
+                        toggle_favorite(current_station_disc)
+                with play_col2:
+                    st.write("")
+
+                play_station_ui(current_station_disc)
+                add_to_history(current_station_disc)
+
+        # --- Favorites tab ---
+        with tab_fav:
+            st.header("Favorites & Recent")
+            fav_uuids = set(st.session_state.favorites)
+
+            # Build favorite station list from history + top + discover (simple in-memory approach)
+            fav_candidates = []
+            for s in (st.session_state.history):
+                if s.get("stationuuid") in fav_uuids:
+                    fav_candidates.append(s)
+
+            fav_candidates_uniq = {s["stationuuid"]: s for s in fav_candidates if s.get("stationuuid")}
+            favorites_list = list(fav_candidates_uniq.values())
+
+            col_fav, col_hist = st.columns(2)
+
+            with col_fav:
+                st.subheader("Favorites")
+                if not favorites_list:
+                    st.write("No favorites yet. Add some from other tabs.")
+                else:
+                    fav_labels = [station_display_name(s) for s in favorites_list]
+                    fav_choice = st.selectbox("Favorite stations", fav_labels, key="fav_select")
+                    fav_station = favorites_list[fav_labels.index(fav_choice)]
+                    if st.button("★ Remove from favorites", key="fav_remove"):
+                        toggle_favorite(fav_station)
+                    play_station_ui(fav_station)
+
+            with col_hist:
+                st.subheader("Recent (last 10)")
+                if not st.session_state.history:
+                    st.write("No recent stations.")
+                else:
+                    for s in reversed(st.session_state.history):
+                        st.write("• " + station_display_name(s))
+
+
 
 
 if __name__ == "__main__":
