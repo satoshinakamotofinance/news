@@ -3020,251 +3020,322 @@ def main():
         import random
         import requests
 
-        st.set_page_config(page_title="World Internet Radio", layout="wide")
-        st.title("World Internet Radio")
+        from streamlit_extras.switch_page_button import switch_page  # Optional for multi-page
+        import time
+
+        # Custom CSS for modern radio UI
+        st.markdown("""
+        <style>
+            .main-header {
+                font-size: 3rem !important;
+                font-weight: 800 !important;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+            .now-playing {
+                background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+                padding: 1.5rem;
+                border-radius: 20px;
+                margin: 1rem 0;
+                text-align: center;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            }
+            .station-card {
+                background: rgba(255,255,255,0.95);
+                padding: 1.5rem;
+                border-radius: 15px;
+                margin: 1rem 0;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+                backdrop-filter: blur(10px);
+            }
+            .favorite-btn {
+                background: linear-gradient(45deg, #ffd700, #ffed4e);
+                border: none;
+                border-radius: 50px;
+                padding: 0.8rem 1.5rem;
+                font-weight: bold;
+                font-size: 1.1rem;
+                transition: all 0.3s ease;
+            }
+            .favorite-btn:hover {
+                transform: scale(1.05);
+                box-shadow: 0 5px 15px rgba(255,215,0,0.4);
+            }
+            .surprise-btn {
+                background: linear-gradient(45deg, #ff9a9e, #fecfef);
+                border-radius: 50px;
+                padding: 1rem 2rem;
+                font-size: 1.2rem;
+                font-weight: bold;
+            }
+            .metric-container {
+                background: rgba(0,0,0,0.1);
+                padding: 1rem;
+                border-radius: 10px;
+            }
+        </style>
+        """, unsafe_allow_html=True)
+
+        st.set_page_config(
+            page_title="🌐 World Radio Hub",
+            layout="wide",
+            page_icon="🎵",
+            initial_sidebar_state="collapsed"
+        )
+
+        # Enhanced theme config
+        st.markdown("""
+        <style>
+        [theme]
+        primaryColor="#667eea"
+        backgroundColor="#0f0f23"
+        secondaryBackgroundColor="#1a1a2e"
+        textColor="#e0e0e0"
+        </style>
+        """, unsafe_allow_html=True)
+
+        st.markdown('<h1 class="main-header">🌐 World Radio Hub</h1>', unsafe_allow_html=True)
 
         API_BASE = "https://de1.api.radio-browser.info/json"
 
-        # ---------- Helpers ----------
-
-        @st.cache_data(ttl=3600)
-        def get_top_stations(limit=200):
-            url = f"{API_BASE}/stations/topclick"
-            resp = requests.get(url, params={"limit": limit}, timeout=10)
-            resp.raise_for_status()
-            return resp.json()
+        # ---------- Enhanced caching with better error handling ----------
+        @st.cache_data(ttl=1800, show_spinner=False)
+        def get_top_stations(limit=300):
+            try:
+                url = f"{API_BASE}/stations/topclick"
+                resp = requests.get(url, params={"limit": limit, "hidebroken": True}, timeout=15)
+                resp.raise_for_status()
+                return resp.json()
+            except:
+                return []
 
         @st.cache_data(ttl=3600)
         def get_countries():
-            url = f"{API_BASE}/countries"
-            resp = requests.get(url, timeout=10)
-            resp.raise_for_status()
-            return resp.json()
+            try:
+                url = f"{API_BASE}/countries"
+                resp = requests.get(url, timeout=10)
+                return resp.json()
+            except:
+                return []
 
         @st.cache_data(ttl=3600)
-        def get_tags():
-            url = f"{API_BASE}/tags"
-            resp = requests.get(url, timeout=10)
-            resp.raise_for_status()
-            return resp.json()
+        def get_languages():
+            try:
+                url = f"{API_BASE}/languages"
+                resp = requests.get(url, timeout=10)
+                return resp.json()
+            except:
+                return []
 
         @st.cache_data(ttl=3600)
-        def search_stations(country=None, tag=None, limit=200):
-            # Simple search using /stations/search
+        def search_stations_advanced(filters, limit=200):
             url = f"{API_BASE}/stations/search"
             params = {
                 "limit": limit,
                 "hidebroken": True,
+                "has_geo": True,
             }
-            if country:
-                params["country"] = country
-            if tag:
-                params["tag"] = tag
-            resp = requests.get(url, params=params, timeout=10)
-            resp.raise_for_status()
-            return resp.json()
+            for key, value in filters.items():
+                if value:
+                    params[key] = value
+            try:
+                resp = requests.get(url, params=params, timeout=15)
+                resp.raise_for_status()
+                return resp.json()
+            except:
+                return []
 
-        def station_display_name(s):
-            name = s.get("name") or "Unknown"
-            country = s.get("country") or "N/A"
-            codec = s.get("codec") or "?"
-            bitrate = s.get("bitrate") or "?"
-            return f"{name} [{country}] ({codec} {bitrate} kbps)"
+        def enhanced_station_display(s):
+            name = s.get("name", "Unknown")[:50]
+            country = s.get("country", "🌍")
+            bitrate = s.get("bitrate", 0)
+            codec = s.get("codec", "?")
+            quality = "🔴" if bitrate < 64 else "🟡" if bitrate < 128 else "🟢"
+            return f"{name} {quality} [{country}]"
 
-        def play_station_ui(station):
-            st.subheader(station.get("name", "Unknown station"))
+        def create_station_card(station, is_playing=False):
+            col1, col2, col3 = st.columns([1, 3, 1])
 
-            col1, col2, col3 = st.columns([2, 2, 1])
             with col1:
-                st.write(f"Country: {station.get('country', 'N/A')}")
-                st.write(f"Language: {station.get('language', 'N/A')}")
+                st.markdown(f"**{station.get('name', 'Unknown')}**")
+                st.caption(f"🇸🇽 {station.get('country', 'N/A')} | {station.get('language', 'N/A')}")
+
             with col2:
-                st.write(f"Codec: {station.get('codec', '?')}")
-                st.write(f"Bitrate: {station.get('bitrate', '?')} kbps")
-                tags = station.get("tags") or ""
-                if isinstance(tags, str):
-                    st.write(f"Tags: {tags}")
+                bitrate = station.get("bitrate", 0)
+                quality = "🔴 Poor" if bitrate < 64 else "🟡 Good" if bitrate < 128 else "🟢 HQ"
+                st.metric("Quality", f"{bitrate}kbps", quality)
+                tags = station.get("tags", "")
+                if tags:
+                    st.caption(f"🎯 {tags}")
+
             with col3:
                 favicon = station.get("favicon")
                 if favicon:
-                    st.image(favicon, width=64)
+                    st.image(favicon, width=50, use_column_width=None)
 
-            homepage = station.get("homepage")
-            if homepage:
-                st.markdown(f"[Station website]({homepage})")
-
-            stream_url = station.get("url_resolved") or station.get("url")
-            if not stream_url:
-                st.error("This station does not provide a stream URL.")
-            else:
-                st.audio(stream_url, autoplay=True)
-
-        # ---------- Session state for favorites & history ----------
-
+        # ---------- Global session state ----------
+        if "current_station" not in st.session_state:
+            st.session_state.current_station = None
         if "favorites" not in st.session_state:
-            st.session_state.favorites = []  # list of stationuuid
+            st.session_state.favorites = set()
         if "history" not in st.session_state:
-            st.session_state.history = []  # list of station dicts
+            st.session_state.history = []
+        if "player_state" not in st.session_state:
+            st.session_state.player_state = "stopped"
 
-        def add_to_history(station):
-            # Keep last 10
-            hist = st.session_state.history
-            # Avoid duplicates back-to-back
-            if not hist or hist[-1].get("stationuuid") != station.get("stationuuid"):
-                hist.append(station)
-                if len(hist) > 10:
-                    del hist[0]
+        # ---------- Main layout ----------
+        header_col1, header_col2 = st.columns([4, 1])
 
-        def toggle_favorite(station):
-            uuid = station.get("stationuuid")
-            if not uuid:
-                return
-            if uuid in st.session_state.favorites:
-                st.session_state.favorites.remove(uuid)
+        with header_col2:
+            if st.button("🎲 Surprise Me!", key="global_surprise", help="Random station from top 200"):
+                top_stations = get_top_stations()
+                if top_stations:
+                    st.session_state.current_station = random.choice(top_stations)
+                    st.session_state.player_state = "playing"
+                    st.rerun()
+
+        # Now playing section (sticky)
+        if st.session_state.current_station:
+            with st.container():
+                st.markdown('<div class="now-playing">', unsafe_allow_html=True)
+                st.markdown("### 🎵 Now Playing")
+                create_station_card(st.session_state.current_station)
+
+                col_btn1, col_audio, col_btn2 = st.columns([1, 4, 1])
+
+                with col_btn1:
+                    if st.button("★" if st.session_state.current_station.get("stationuuid") not in st.session_state.favorites else "⭐",
+                                 key="toggle_fav_global", help="Add to favorites"):
+                        uuid = st.session_state.current_station.get("stationuuid")
+                        if uuid:
+                            if uuid in st.session_state.favorites:
+                                st.session_state.favorites.discard(uuid)
+                            else:
+                                st.session_state.favorites.add(uuid)
+                            st.rerun()
+
+                with col_audio:
+                    stream_url = st.session_state.current_station.get("url_resolved") or st.session_state.current_station.get("url")
+                    if stream_url:
+                        st.audio(stream_url, autoplay=True, sample_rate=44100)
+                    else:
+                        st.error("❌ No stream available")
+
+                with col_btn2:
+                    if st.button("⏹️ Stop", key="stop_global"):
+                        st.session_state.current_station = None
+                        st.session_state.player_state = "stopped"
+                        st.rerun()
+
+                st.markdown('</div>', unsafe_allow_html=True)
+        else:
+            st.info("👆 Select a station from tabs below to start listening!")
+
+        # ---------- Enhanced sidebar ----------
+        with st.sidebar:
+            st.markdown("### 🎛️ Quick Controls")
+
+            # Load filter data
+            countries = get_countries()
+            languages = get_languages()
+
+            st.markdown("#### 🌍 Filters")
+            country = st.selectbox("Country", [""] + [c["name"] for c in countries[:250]])
+            language = st.selectbox("Language", [""] + [l["name"] for l in languages[:250]])
+            min_bitrate = st.slider("Min Quality", 0, 320, 64)
+
+            st.markdown("---")
+
+            st.markdown("#### ⭐ Favorites")
+            if st.session_state.favorites:
+                st.success(f"{len(st.session_state.favorites)} saved")
             else:
-                st.session_state.favorites.append(uuid)
+                st.info("No favorites yet")
 
-        def is_favorite(station):
-            uuid = station.get("stationuuid")
-            return uuid in st.session_state.favorites if uuid else False
+            if st.button("🗑️ Clear All", key="clear_all"):
+                st.session_state.favorites.clear()
+                st.session_state.history.clear()
+                st.session_state.current_station = None
+                st.rerun()
 
-        # ---------- Sidebar filters ----------
+        # ---------- Main tabs ----------
+        tab1, tab2, tab3, tab4 = st.tabs(["🎯 Top Hits", "🔍 Discover", "⭐ Favorites", "📜 History"])
 
+        with tab1:
+            st.header("🌟 Top 300 Global Stations")
+            stations = [s for s in get_top_stations(300) if (s.get("bitrate", 0) >= min_bitrate)]
 
+            if stations:
+                labels = [enhanced_station_display(s) for s in stations]
+                selected = st.selectbox("Pick your station:", labels, key="top_select")
+                station = stations[labels.index(selected)]
 
-        # Preload country and tag lists
-        try:
-            countries_raw = get_countries()
-            tags_raw = get_tags()
-        except Exception as e:
-            st.error(f"Failed to load filters: {e}")
-            countries_raw, tags_raw = [], []
+                if st.button("▶️ Play", key="play_top"):
+                    st.session_state.current_station = station
+                    if station.get("stationuuid") not in st.session_state.history:
+                        st.session_state.history.append(station)
+                        if len(st.session_state.history) > 20:
+                            st.session_state.history.pop(0)
+                    st.rerun()
 
-        countries = ["Any"] + sorted([c["name"] for c in countries_raw]) if countries_raw else ["Any"]
-        tags = ["Any"] + sorted([t["name"] for t in tags_raw][:300]) if tags_raw else ["Any"]
+        with tab2:
+            st.header("🧭 Discover New Stations")
+            filters = {"country": country, "language": language}
+            stations = [s for s in search_stations_advanced(filters, 200) if (s.get("bitrate", 0) >= min_bitrate)]
 
-        country_filter = st.selectbox("Country", countries)
-        tag_filter = st.selectbox("Tag / Genre", tags)
+            if stations:
+                labels = [enhanced_station_display(s) for s in stations]
+                selected = st.selectbox("Found stations:", labels, key="disc_select")
+                station = stations[labels.index(selected)]
 
-        min_bitrate = st.slider("Min bitrate (kbps)", 0, 320, 0, step=32)
+                col1, col2 = st.columns([4, 1])
+                with col1:
+                    st.markdown(f"[🌐 {station.get('homepage', '#')}]({station.get('homepage', '#')})")
+                with col2:
+                    if st.button("▶️ Play", key="play_disc"):
+                        st.session_state.current_station = station
+                        st.session_state.history.append(station)
+                        st.rerun()
 
-        surprise_me = st.button("🎲 Surprise me")
+        with tab3:
+            st.header("⭐ Your Favorites")
+            fav_stations = []
+            all_stations = get_top_stations(500) + search_stations_advanced({}, 500)
 
+            for uuid in st.session_state.favorites:
+                for s in all_stations:
+                    if s.get("stationuuid") == uuid:
+                        fav_stations.append(s)
+                        break
+
+            if fav_stations:
+                labels = [enhanced_station_display(s) for s in fav_stations]
+                selected = st.selectbox("Play favorite:", labels, key="fav_select")
+                station = fav_stations[labels.index(selected)]
+
+                if st.button("▶️ Play", key="play_fav"):
+                    st.session_state.current_station = station
+                    st.rerun()
+
+        with tab4:
+            st.header("📜 Recently Played")
+            recent = st.session_state.history[-10:][::-1]
+            for i, station in enumerate(recent, 1):
+                with st.container():
+                    col1, col2 = st.columns([4, 1])
+                    with col1:
+                        st.markdown(f"**{i}.** {enhanced_station_display(station)}")
+                    with col2:
+                        if st.button("▶️", key=f"play_hist_{i}"):
+                            st.session_state.current_station = station
+                            st.rerun()
+
+        # Footer
         st.markdown("---")
-
-
-        # ---------- Tabs ----------
-
-        tab_top, tab_discover, tab_fav = st.tabs(["Top 200", "Discover", "Favorites"])
-
-        current_station = None
-
-        # --- Top 200 tab ---
-        with tab_top:
-            st.header("Top 200 Stations (Global)")
-            try:
-                stations_top = get_top_stations(200)
-            except Exception as e:
-                st.error(f"Failed to load top stations: {e}")
-                stations_top = []
-
-            # Apply local bitrate filter
-            stations_top = [s for s in stations_top if (s.get("bitrate") or 0) >= min_bitrate]
-
-            if not stations_top:
-                st.warning("No stations found for current filters.")
-            else:
-                option_labels = [station_display_name(s) for s in stations_top]
-                idx_default = 0
-
-                if surprise_me:
-                    idx_default = random.randrange(len(stations_top))
-
-                choice = st.selectbox("Choose a station", option_labels, index=idx_default, key="top_select")
-                current_station = stations_top[option_labels.index(choice)]
-
-                fav_col, play_col = st.columns([1, 4])
-                with fav_col:
-                    if st.button("★ Favorite" if not is_favorite(current_station) else "★ Unfavorite"):
-                        toggle_favorite(current_station)
-                with play_col:
-                    st.write("")
-
-                play_station_ui(current_station)
-                add_to_history(current_station)
-
-        # --- Discover tab ---
-        with tab_discover:
-            st.header("Discover by Country / Tag")
-            st.caption("Use filters on the left, then pick from the results.")
-
-            selected_country = None if country_filter == "Any" else country_filter
-            selected_tag = None if tag_filter == "Any" else tag_filter
-
-            try:
-                stations_disc = search_stations(country=selected_country, tag=selected_tag, limit=200)
-            except Exception as e:
-                st.error(f"Failed to search stations: {e}")
-                stations_disc = []
-
-            stations_disc = [s for s in stations_disc if (s.get("bitrate") or 0) >= min_bitrate]
-
-            if not stations_disc:
-                st.warning("No stations found for current filters.")
-            else:
-                labels_disc = [station_display_name(s) for s in stations_disc]
-                idx_default_disc = 0
-                if surprise_me:
-                    idx_default_disc = random.randrange(len(stations_disc))
-
-                choice_disc = st.selectbox("Choose a station", labels_disc, index=idx_default_disc, key="disc_select")
-                current_station_disc = stations_disc[labels_disc.index(choice_disc)]
-
-                fav_col2, play_col2 = st.columns([1, 4])
-                with fav_col2:
-                    if st.button("★ Favorite" if not is_favorite(current_station_disc) else "★ Unfavorite", key="fav_disc"):
-                        toggle_favorite(current_station_disc)
-                with play_col2:
-                    st.write("")
-
-                play_station_ui(current_station_disc)
-                add_to_history(current_station_disc)
-
-        # --- Favorites tab ---
-        with tab_fav:
-            st.header("Favorites & Recent")
-            fav_uuids = set(st.session_state.favorites)
-
-            # Build favorite station list from history + top + discover (simple in-memory approach)
-            fav_candidates = []
-            for s in (st.session_state.history):
-                if s.get("stationuuid") in fav_uuids:
-                    fav_candidates.append(s)
-
-            fav_candidates_uniq = {s["stationuuid"]: s for s in fav_candidates if s.get("stationuuid")}
-            favorites_list = list(fav_candidates_uniq.values())
-
-            col_fav, col_hist = st.columns(2)
-
-            with col_fav:
-                st.subheader("Favorites")
-                if not favorites_list:
-                    st.write("No favorites yet. Add some from other tabs.")
-                else:
-                    fav_labels = [station_display_name(s) for s in favorites_list]
-                    fav_choice = st.selectbox("Favorite stations", fav_labels, key="fav_select")
-                    fav_station = favorites_list[fav_labels.index(fav_choice)]
-                    if st.button("★ Remove from favorites", key="fav_remove"):
-                        toggle_favorite(fav_station)
-                    play_station_ui(fav_station)
-
-            with col_hist:
-                st.subheader("Recent (last 10)")
-                if not st.session_state.history:
-                    st.write("No recent stations.")
-                else:
-                    for s in reversed(st.session_state.history):
-                        st.write("• " + station_display_name(s))
+        st.markdown("*Built for music lovers worldwide. Data from [Radio Browser API](https://www.radio-browser.info/)* 🎵✨")
 
 
 
