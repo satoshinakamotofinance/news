@@ -5,8 +5,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
 import streamlit as st
-from transformers import AutoModelForCausalLM, AutoTokenizer
-import torch
+
 
 # Load model and tokenizer once
 @st.cache_resource(show_spinner=True)
